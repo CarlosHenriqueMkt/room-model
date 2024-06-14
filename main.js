@@ -101,7 +101,7 @@ function events() {
   sword = document.getElementById('sword')
   sword.addEventListener('click', () => {
     gsap.to(camera.position, { duration: 2, x: 1.6, y: 1.9, z: 0, ease: "power1.inOut" })
-    gsap.to(camera.rotation, { duration: 2, z: 0, y: -1.6, z: 0, ease: "power1.inOut" })
+    gsap.to(camera.rotation, { duration: 2, x: 0, y: -1.6, z: 0, ease: "power1.inOut" })
   })
 
   computer = document.getElementById('computer')

@@ -1,8 +1,8 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import GUI from 'lil-gui'; 
+import gsap from 'gsap';
 
 
 const sizes = {
@@ -12,20 +12,21 @@ const sizes = {
 
 const aspectRatio = sizes.width / sizes.height
 
-let renderer, scene, camera, canvas, controls;
+let renderer, scene, camera, canvas;
 let loader, environment, pmremGenerator;
+let duck, propeller, sword, computer, books, reset;
 const gui = new GUI();
 
-/* const clock = new THREE.Clock() */
 
 experience();
 model();
+events();
 animate();
 
 function experience() {
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(50, aspectRatio, 0.1, 1000);
-  camera.position.set(-2.8, 1, 1.5)
+  camera.position.set(-2.8, 1, 1.5);
   camera.rotation.set(0, -1, 0)
   scene.add(camera);
 
@@ -58,10 +59,6 @@ function experience() {
   renderer.setSize(sizes.width, sizes.height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   canvas.appendChild(renderer.domElement);
-
-/*   controls = new OrbitControls( camera, renderer.domElement );
-  controls.enableDamping = true
-  controls.enableZoom = true */
   renderer.render(scene, camera);
 }
 
@@ -80,18 +77,6 @@ function model() {
     const model = gltf.scene
     scene.add( model );
 
-    gui.add(model.position, 'x').min(-100).max(100).step(0.00001).name('model position X')
-    gui.add(model.position, 'y').min(-100).max(100).step(0.00001).name('model position Y')
-    gui.add(model.position, 'z').min(-100).max(100).step(0.00001).name('model position Z')
-    gui.add(model.rotation, 'x').min(-100).max(100).step(0.00001).name('model rotation X')
-    gui.add(model.rotation, 'y').min(-100).max(100).step(0.00001).name('model rotation Y')
-    gui.add(model.rotation, 'z').min(-100).max(100).step(0.00001).name('model rotation Z')
-
-
-/*     const boundingBox = new THREE.Box3().setFromObject(model);
-    const center = boundingBox.getCenter(new THREE.Vector3());
-    camera.lookAt(center);
- */
   }, undefined, function ( error ) {
 
     console.error( error );
@@ -100,10 +85,45 @@ function model() {
 
 }
 
-function animate() {
+function events() {
+  duck = document.getElementById('duck')
+  duck.addEventListener('click', () => {
+    gsap.to(camera.position, { duration: 2, x: 1.9, y: 1.5, z: -1.4, ease: "power1.inOut" })
+    gsap.to(camera.rotation, { duration: 2, x: 0, y: 0, z: 0, ease: "power1.inOut" })
+  })
 
-  /* const elapsedTime = clock.getElapsedTime() */
-  /* controls.update(); */
+  propeller = document.getElementById('propeller')
+  propeller.addEventListener('click', () => {
+    gsap.to(camera.position, { duration: 2, x: -1.6, y: 1.2, z: -0.7, ease: "power1.inOut" })
+    gsap.to(camera.rotation, { duration: 2, x: 0, y: -0.5, z: 0, ease: "power1.inOut" })
+  })
+
+  sword = document.getElementById('sword')
+  sword.addEventListener('click', () => {
+    gsap.to(camera.position, { duration: 2, x: 1.6, y: 1.9, z: 0, ease: "power1.inOut" })
+    gsap.to(camera.rotation, { duration: 2, z: 0, y: -1.6, z: 0, ease: "power1.inOut" })
+  })
+
+  computer = document.getElementById('computer')
+  computer.addEventListener('click', () => {
+    gsap.to(camera.position, { duration: 2, x: 1.2, y: 1, z: 0.8, ease: "power1.inOut" })
+    gsap.to(camera.rotation, { duration: 2, x: 0, y: -1, z: 0, ease: "power1.inOut" })
+  })
+
+  books = document.getElementById('books')
+  books.addEventListener('click', () => {
+    gsap.to(camera.position, { duration: 2, x: -0.9, y: 1.1, z: 2.2, ease: "power1.inOut", });
+    gsap.to(camera.rotation, { duration: 2, x: -0.5, y: -0.6, z: -0.3, ease: "power1.inOut" })
+  })
+
+  reset = document.getElementById('reset')
+  reset.addEventListener('click', () => {
+    gsap.to(camera.position, { duration: 2, x: -2.8, y: 1, z: 1.5, ease: "power1.inOut", });
+    gsap.to(camera.rotation, { duration: 2, x: 0, y: -1, z: 0, ease: "power1.inOut" })
+  })
+}
+
+function animate() {
   requestAnimationFrame(animate);
   renderer.render(scene, camera);
 }
